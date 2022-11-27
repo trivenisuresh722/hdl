@@ -1,0 +1,80 @@
+module counter_160_163(
+    input clk_m,
+    inout clk_d,
+    input rst,
+    output [3:0] cout_160_163
+    );
+    
+    reg [25:0] scale;
+    reg [3:0] counter;
+    
+    always @(posedge clk_m or posedge rst)
+    begin
+        if (rst)
+            scale <= 26'd0;
+        else
+            scale <= scale + 1;
+    end
+    assign clk_d = scale[24];
+    always @(posedge clk_d or posedge rst)
+    begin
+        if (rst)
+            counter <= 4'd0;
+        else
+            counter <= counter + 1;
+    end
+    assign cout_160_163 = counter;
+endmodule
+------------------
+
+
+module tb_counter_160_163(
+    input clk_m,
+    inout clk_d,
+    input rst,
+    output [3:0] cout_160_163
+    );
+    
+    reg CLKM;
+    reg RST;
+    wire [3:0] COUT_160_163;
+    wire CLKD;
+    
+    counter_160_163 uut (
+        .clk_m(CLKM),
+        .clk_d(CLKD),
+        .rst(RST),
+        .cout_160_163(COUT_160_163)
+        );
+    initial
+    begin
+        CLKM = 0;
+        forever #10 CLKM = ~CLKM;
+    end
+    initial
+    begin
+        RST = 1;
+        #20;
+        RST = 0;
+        #2000;
+    end
+    
+endmodule
+----------------
+
+
+set_property IOSTANDARD LVCMOS33 [get_ports {cout_160_163[2]}]
+set_property IOSTANDARD LVCMOS33 [get_ports clk_m]
+set_property IOSTANDARD LVCMOS33 [get_ports {cout_160_163[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports clk_d]
+set_property IOSTANDARD LVCMOS33 [get_ports rst]
+set_property IOSTANDARD LVCMOS33 [get_ports {cout_160_163[3]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {cout_160_163[1]}]
+set_property PACKAGE_PIN E3 [get_ports clk_m]
+set_property PACKAGE_PIN T8 [get_ports clk_d]
+set_property PACKAGE_PIN P4 [get_ports rst]
+set_property PACKAGE_PIN U1 [get_ports {cout_160_163[1]}]
+
+set_property PACKAGE_PIN P2 [get_ports {cout_160_163[3]}]
+set_property PACKAGE_PIN R2 [get_ports {cout_160_163[2]}]
+set_property PACKAGE_PIN P5 [get_ports {cout_160_163[0]}]

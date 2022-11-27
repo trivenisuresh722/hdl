@@ -1,0 +1,60 @@
+module sr_ff_160_163(
+    input s,
+    input r,
+    input clk,
+    input rst,
+    input p,
+    output reg q_160_163,
+    output reg q_bar_160_163
+    );
+    
+    always @(posedge clk or posedge rst)
+    if(rst==1'b1)   
+    begin q_160_163<=1'b0;q_bar_160_163<=1'b1;end
+    else if(p==1'b1)
+    begin q_160_163<=1'b1;q_bar_160_163<=1'b0;end
+    else
+    case({s,r})
+    2'b00:begin q_160_163<=q_160_163;q_bar_160_163<=q_bar_160_163;end
+    2'b01:begin q_160_163<=1'b0;q_bar_160_163<=1'b1;end
+    2'b10:begin q_160_163<=1'b1;q_bar_160_163<=1'b0;end
+    2'b11:begin q_160_163<=1'bx;q_bar_160_163<=1'bx;end
+    default:{q_160_163,q_bar_160_163}<=2'bxx;
+    endcase;
+endmodule
+---------
+module sr_tb_160_163();
+reg s;
+reg r;
+reg clk;
+reg p;
+reg rst;
+
+wire q_160_163;
+wire q_bar_160_163;
+
+sr_ff_160_163 uut(
+             .q_160_163(q_160_163),
+             .q_bar_160_163(q_bar_160_163),
+             .s(s),
+             .rst(rst),
+             .clk(clk),
+             .p(p),
+             .r(r)
+           );
+           initial begin
+           s=0;
+           r=0;
+           clk=0;
+           rst=1'b1;
+           #10 p=1'b1;
+           #10 p=1'b0;
+           
+           end
+           
+           always #2{s,r}={s,r}+1'b1;
+           always #1 clk=~clk;
+           initial #10 rst=1'b0;
+           
+           initial #200 $finish;          
+endmodule

@@ -1,0 +1,48 @@
+module D_ff(
+    input D,
+    input clk,
+    input rst,
+    output reg Q
+    );
+    reg result;
+    
+    always @(posedge clk or posedge rst)
+    begin
+        if(rst==1'b1)
+            Q<=0;
+        else
+            Q<=D;
+        
+    end
+   
+endmodule
+
+-----------
+
+module tb;
+reg D,clk,rst;
+wire Q;
+D_ff uut(
+            .D(D),
+            .clk(clk),
+            .rst(rst),
+            .Q(Q)
+         );
+         
+         initial begin
+            clk=0;
+       forever #10 clk=~clk;
+         end
+         initial begin
+            rst=1;
+            D<=0;
+            #100;
+            rst=0;
+            D<=1;
+            #100;
+            D<=0;
+            #100;
+            D<=1;
+            #100;
+         end
+endmodule

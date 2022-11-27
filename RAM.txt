@@ -1,0 +1,111 @@
+module ram(
+    input clk,
+    input rd,
+    input wr,
+    input [2:0] din,
+    output reg [2:0] dout,
+    input [2:0] addr
+    );
+    reg [2:0] ram [0:8];
+    always @(posedge clk)
+    begin
+    if (wr==1 && rd==0)
+    begin
+        ram[addr]<=din;
+        dout<=3'bzzz;
+        
+    end 
+    else if(wr==0 && rd==1)
+    begin
+        dout<=ram[addr];
+    end
+    end
+endmodule
+------------
+
+module tb_ram;
+
+reg [2:0] din ;
+reg [2:0] addr ;
+reg wr,rd,clk;
+wire [2:0] dout;
+
+ram uut(.din(din),
+        .addr(addr),
+        .wr(wr),
+        .rd(rd),
+        .clk(clk),
+        .dout(dout)
+        );
+        initial begin
+            clk=0;
+            forever #10 clk=~clk;
+             
+        end
+        initial begin
+            #10;
+            wr=1;
+            rd=0;
+            addr=3'b000;
+            din=3'b111;
+            #20;
+            wr=1;
+            rd=0;
+            addr=3'b001;
+            din=3'b110;
+            #20;
+            wr=1;
+            rd=0;
+            addr=3'b100;
+            din=3'b010;
+            #20;
+            din=3'bzzz;
+            wr=0;
+            rd=1;
+            addr=3'b000;
+            
+            #20;
+            wr=0;
+            rd=1;
+            addr=3'b001;
+            
+            #20;
+            wr=0;
+            rd=1;
+            addr=3'b100;
+            
+            #20;
+            addr=3'b010;
+             wr=1;
+             rd=0;
+        end
+        
+    
+endmodule
+--------------
+
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets clk_IBUF]
+set_property IOSTANDARD LVCMOS33 [get_ports {addr[1]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {din[2]}]
+set_property IOSTANDARD LVCMOS33 [get_ports wr]
+set_property IOSTANDARD LVCMOS33 [get_ports {dout[1]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {addr[2]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {din[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {dout[2]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {dout[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {din[1]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {addr[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports clk]
+set_property IOSTANDARD LVCMOS33 [get_ports rd]
+set_property PACKAGE_PIN R3 [get_ports {addr[0]}]
+set_property PACKAGE_PIN P3 [get_ports {addr[1]}]
+set_property PACKAGE_PIN P4 [get_ports {addr[2]}]
+set_property PACKAGE_PIN U9 [get_ports clk]
+set_property PACKAGE_PIN V2 [get_ports {din[0]}]
+set_property PACKAGE_PIN U2 [get_ports {din[1]}]
+set_property PACKAGE_PIN T3 [get_ports {din[2]}]
+set_property PACKAGE_PIN U1 [get_ports {dout[0]}]
+set_property PACKAGE_PIN R2 [get_ports {dout[1]}]
+set_property PACKAGE_PIN P2 [get_ports {dout[2]}]
+set_property PACKAGE_PIN R7 [get_ports rd]
+set_property PACKAGE_PIN U8 [get_ports wr]

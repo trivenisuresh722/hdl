@@ -1,0 +1,147 @@
+module seq(
+    input clk,
+    input rst,
+    input ip,
+    output reg op_160_163
+    );
+    reg [2:0] state;
+	 reg [2:0] next_state;
+
+	 parameter [1:0] s0=2'b00; // state -> 0
+	 parameter [1:0] s1=2'b01; // state -> 1
+	 parameter [1:0] s2=2'b10; // state -> 10
+	 parameter [1:0] s3=2'b11; // state -> 101
+
+
+	 always @(posedge clk, posedge rst)
+	 begin
+		if (rst)
+   			state<=s0;
+  		else
+   			state<=next_state;
+	 end
+
+	 always @(state, ip)
+	 begin
+	 	case(state)
+		s0:
+			if (ip)
+   			begin
+    				next_state<=s1;
+    				op_160_163<=1'b0;
+   			end
+   			else
+   			begin
+    				next_state<=s0;
+    				op_160_163<=1'b0;
+   			end
+  
+  		s1:
+   			if (ip)
+   			begin
+    				next_state<=s1;
+    				op_160_163<=1'b0;
+   			end
+   			else
+   			begin
+    				next_state<=s2;
+    				op_160_163<=1'b0;
+   			end
+
+  		s2:
+   			if (ip)
+   			begin
+    				next_state<=s3;
+    				op_160_163<=1'b0;
+   			end
+   			else
+   			begin
+    				next_state<=s0;
+    				op_160_163<=1'b0;
+   			end
+  
+  		s3:
+   			if (ip)
+   			begin
+    				next_state<=s1;
+    				op_160_163<=1'b1;
+   			end
+   			else
+   			begin
+    				next_state<=s2;
+    				op_160_163<=1'b0;
+   			end
+default:
+   			begin
+           			next_state<=s0;
+           			op_160_163<=1'b0;
+   			end
+  		endcase
+ 	end
+endmodule
+------------------------
+
+module tb_seq();
+    reg rst;
+	reg clk;
+	reg ip;
+
+	// Outputs
+	wire op_160_163;
+
+	// Instantiate the Unit Under Test (UUT)
+	seq uut (
+		.rst(rst), 
+		.clk(clk), 
+		.ip(ip), 
+		.op_160_163(op_160_163)
+	);
+
+	initial begin
+		// Initialize Inputs
+		clk = 1;
+		forever #10 clk=~clk;
+		end
+		
+		initial begin
+		// Initialize Inputs
+		rst = 1;
+		 #20;
+		 rst = 0;
+		 #1000;
+		 
+		end
+		
+		
+		initial begin
+		// Initialize Inputs
+		ip = 1;
+		 #40;
+		 ip = 1;
+		 #20;
+		 ip = 1;
+		 #20;
+		 ip = 1;
+		 #20;
+		 ip = 1;
+		 #20;
+		 ip = 1;
+		 #20;
+		 ip = 1;
+		 #20;
+		 ip = 0;
+		 #20;
+		  ip = 1;
+		 #20;
+		 ip = 1;
+		 #20;
+		 ip = 0;
+		 #20;
+		 ip = 1;
+		 #20;
+		 
+		
+
+	end      
+endmodule
+---------------

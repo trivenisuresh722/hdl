@@ -1,0 +1,68 @@
+Adder in 3 modelling style:
+
+Behavioral:
+module adder_behave(
+    input a,
+    input b,
+    output reg carry_167,
+    output reg sum_167
+    );
+    always @(a,b) 
+    begin
+        sum_167=a^b;
+        carry_167=a&b;
+    end
+    
+endmodule
+
+
+Gate:
+module adder_gate(
+    input a,
+    input b,
+    output sum_167,
+    output carry_167
+    );
+    xor sum1(sum_167,a,b);
+    and carry1(carry_167,a,b);
+endmodule
+
+Dataflow:
+module adder_dataflow(
+    input a,
+    input b,
+    output carry_167,
+    output sum_167
+    );
+    assign carry_167=a&b;
+    assign sum_167=a^b;
+endmodule
+
+Testbench:
+
+module tb_adder(
+
+    );
+    
+    reg a,b;
+wire carry_171,sum_171;
+adder_167 uut(
+           .a(a),
+           .b(b),
+           .carry_171(carry_171),
+           .sum_171(sum_171)
+           );
+initial begin
+a=1'b0;
+b=1'b0;
+#5
+a=1'b0;
+b=1'b1;
+#5
+a=1'b1;
+b=1'b0;
+#5
+a=1'b1;
+a=1'b1;
+end
+endmodule

@@ -1,0 +1,67 @@
+module jk_160_163(
+    input j,
+    input k,
+    input clk,
+    input rst,
+    output reg q_160_163,
+    output reg q_bar_160_163
+    );
+    always @ (posedge clk or posedge rst)
+    if(rst==1'b1)
+    begin q_160_163=1'b0;q_bar_160_163<=1'b1;end
+    else
+    case({j,k})
+    2'b00:begin q_160_163<=q_160_163;q_bar_160_163<=q_bar_160_163;end
+    2'b01:begin q_160_163<=0;q_bar_160_163<=1;end
+    2'b10:begin q_160_163<=1;q_bar_160_163<=0;end
+    2'b11:begin q_160_163<=~q_160_163;q_bar_160_163<=~q_bar_160_163;end
+    endcase
+endmodule
+---------
+
+module jk_tb_160_163();
+reg j;
+reg k;
+reg clk;
+reg rst;
+wire q_160_163;
+wire q_bar_160_163;
+
+jk_160_163 uut(
+    .j(j),
+    .k(k),
+    .clk(clk),
+    .rst(rst),
+    .q_160_163(q_160_163),
+    .q_bar_160_163(q_bar_160_163)
+);
+
+initial begin
+j=0;
+k=0;
+clk=0;
+rst=1;
+
+end
+always #1 clk=~clk;
+always #2 {j,k}={j,k}+1'b1;
+initial #10 rst=1'b0;
+initial #100 $finish;
+endmodule
+----------
+
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets clk_IBUF]
+
+set_property IOSTANDARD LVCMOS33 [get_ports k]
+set_property IOSTANDARD LVCMOS33 [get_ports q_160_163]
+set_property IOSTANDARD LVCMOS33 [get_ports q_bar_160_163]
+set_property IOSTANDARD LVCMOS33 [get_ports rst]
+set_property IOSTANDARD LVCMOS33 [get_ports clk]
+set_property IOSTANDARD LVCMOS33 [get_ports j]
+set_property PACKAGE_PIN P4 [get_ports clk]
+set_property PACKAGE_PIN P3 [get_ports j]
+set_property PACKAGE_PIN R3 [get_ports k]
+set_property PACKAGE_PIN P2 [get_ports q_160_163]
+set_property PACKAGE_PIN R2 [get_ports q_bar_160_163]
+set_property PACKAGE_PIN U9 [get_ports rst]
+

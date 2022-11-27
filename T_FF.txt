@@ -1,0 +1,55 @@
+module T_ff_160_163(
+    input t,
+    input clk,
+    input rst,
+    output reg q_160_163,
+    output reg qbar_160_163
+    );
+    always @(posedge clk or posedge rst)
+    
+        if(rst==1'b1)
+            begin q_160_163<=1'b0;qbar_160_163<=1'b1;end
+        else if(t==1'b0)
+            begin q_160_163<=q_160_163;qbar_160_163<=qbar_160_163;end
+        else
+            begin q_160_163<=qbar_160_163;qbar_160_163<=q_160_163;end        
+endmodule
+---------
+
+module T_ff_tb();
+reg t,clk,rst;
+wire q,qbar;
+
+T_ff_160_163 uut(
+            .q_160_163(q),
+            .qbar_160_163(qbar),
+            .t(t),
+            .clk(clk),
+            .rst(rst)
+            );
+initial begin
+    t = 0;
+    clk=0;
+    rst=1;
+
+end
+always #2 clk=~clk;
+always #4 t=~t;
+always #10 rst=1'b0;
+initial #100 $finish;
+
+
+endmodule
+-----------
+
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets clk_IBUF]
+set_property PACKAGE_PIN P3 [get_ports clk]
+set_property IOSTANDARD LVCMOS33 [get_ports clk]
+set_property PACKAGE_PIN R2 [get_ports qbar_160_163]
+set_property IOSTANDARD LVCMOS33 [get_ports qbar_160_163]
+set_property PACKAGE_PIN U9 [get_ports rst]
+set_property IOSTANDARD LVCMOS33 [get_ports rst]
+set_property PACKAGE_PIN P4 [get_ports t]
+set_property IOSTANDARD LVCMOS33 [get_ports t]
+set_property PACKAGE_PIN P2 [get_ports q_160_163]
+set_property IOSTANDARD LVCMOS33 [get_ports q_160_163]
